@@ -5,6 +5,9 @@ import {
   Package,
   Radar,
   Network,
+  Briefcase,
+  Wallet,
+  Users,
   Settings,
   type LucideIcon,
 } from "lucide-react"
@@ -53,6 +56,24 @@ export const mainNav: NavItem[] = [
     href: "/organograma",
     icon: Network,
     description: "Estrutura organizacional da Neuro Botics.",
+  },
+  {
+    title: "Administrativo",
+    href: "/administrativo",
+    icon: Briefcase,
+    description: "Área administrativa da operação.",
+  },
+  {
+    title: "Financeira",
+    href: "/financeira",
+    icon: Wallet,
+    description: "Área financeira da operação.",
+  },
+  {
+    title: "RH",
+    href: "/rh",
+    icon: Users,
+    description: "Área de recursos humanos da operação.",
   },
 ]
 

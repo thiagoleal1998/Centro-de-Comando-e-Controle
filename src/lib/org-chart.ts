@@ -26,11 +26,6 @@ export const ORG_CHART: OrgNode = {
         {
           title: "Operações",
           people: [{ name: "Alexandre Almeida", role: "Operações" }],
-          children: [
-            { title: "Administrativo" },
-            { title: "Financeira" },
-            { title: "RH" },
-          ],
         },
       ],
     },

@@ -7,6 +7,7 @@ Sistema interno da Neuro Botics (marca do **JT Group**). Reúne:
 - **Assets** — biblioteca central de imagens, vídeos e referências.
 - **Análise de Produtos** — sincronização ao vivo com múltiplas planilhas do Google Sheets (Esteira de Mineração, Shortlist Pronix), incluindo uma calculadora de viabilidade/rentabilidade por modalidade de envio.
 - **Organograma** — estrutura organizacional da Neuro Botics (Conselho Administrativo, Diretoria, Operações).
+- **Administrativo**, **Financeira** e **RH** — páginas dedicadas para cada área (ainda vazias, prontas para conteúdo).
 
 Veja [ARCHITECTURE.md](./ARCHITECTURE.md) para a arquitetura completa, [ENVIRONMENT.md](./ENVIRONMENT.md) para as variáveis de ambiente necessárias e [CHANGELOG.md](./CHANGELOG.md) para o histórico de versões.
 

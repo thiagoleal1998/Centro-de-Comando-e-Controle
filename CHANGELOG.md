@@ -2,6 +2,14 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.4.1] — 2026-11-03
+
+### Adicionado
+- Páginas **Administrativo**, **Financeira** e **RH** no menu principal — vazias por enquanto, prontas para receber conteúdo.
+
+### Alterado
+- Removidas as abas Administrativo/Financeira/RH do Organograma (viraram páginas próprias no menu em vez de nós da árvore).
+
 ## [0.4.0] — 2026-11-03
 
 ### Adicionado
