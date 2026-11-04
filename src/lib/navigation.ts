@@ -1,12 +1,9 @@
 import {
   LayoutDashboard,
-  Sparkles,
   FolderKanban,
   Images,
   Package,
   Radar,
-  Megaphone,
-  Workflow,
   Settings,
   type LucideIcon,
 } from "lucide-react"
@@ -25,12 +22,6 @@ export const mainNav: NavItem[] = [
     href: "/dashboard",
     icon: LayoutDashboard,
     description: "Visão geral do Centro de Comando.",
-  },
-  {
-    title: "Central Criativa",
-    href: "/central-criativa",
-    icon: Sparkles,
-    description: "Briefing, geração, preview e versões de criativos.",
   },
   {
     title: "Projetos",
@@ -55,20 +46,6 @@ export const mainNav: NavItem[] = [
     href: "/analise-produtos",
     icon: Radar,
     description: "Esteira de mineração e validação de produtos (planilha JT).",
-  },
-  {
-    title: "Campanhas",
-    href: "/campanhas",
-    icon: Megaphone,
-    disabled: true,
-    description: "Gestão de campanhas em marketplaces e mídia paga.",
-  },
-  {
-    title: "Automações",
-    href: "/automacoes",
-    icon: Workflow,
-    disabled: true,
-    description: "Agentes e automações internas da operação.",
   },
 ]
 

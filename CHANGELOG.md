@@ -2,6 +2,12 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.3.1] — 2026-11-03
+
+### Removido
+- **Campanhas** e **Automações** (placeholders ainda não construídos) removidos do menu e das rotas.
+- **Central Criativa** removida do menu principal — o código, as rotas e os dados continuam intactos, apenas sem acesso direto pela navegação.
+
 ## [0.3.0] — 2026-11-03
 
 ### Adicionado
