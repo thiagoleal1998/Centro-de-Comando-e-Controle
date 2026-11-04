@@ -1,15 +1,16 @@
 import { getGoogleSheetsAccessToken } from "./google-sheets-tokens"
 
-const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID
-
 export type SheetTable = {
   headers: string[]
   rows: Record<string, string>[]
+  /** Linhas brutas (incluindo a que vira "header") — para abas que não são
+   * uma tabela tradicional, ex. um resumo em formato chave/valor. */
+  raw: string[][]
 }
 
 function rangeToTable(values: string[][] | undefined): SheetTable {
   if (!values || values.length === 0) {
-    return { headers: [], rows: [] }
+    return { headers: [], rows: [], raw: [] }
   }
 
   const [headerRow, ...dataRows] = values
@@ -25,26 +26,27 @@ function rangeToTable(values: string[][] | undefined): SheetTable {
       return record
     })
 
-  return { headers, rows }
+  return { headers, rows, raw: values }
 }
 
 /**
- * Busca várias abas de uma vez (uma chamada à API) e retorna cada uma já
- * parseada como {headers, rows}. Sempre busca ao vivo — a planilha é a
- * fonte da verdade, não mantemos cópia local.
+ * Busca várias abas de uma só vez (uma chamada à API) de uma planilha
+ * específica, já parseadas como {headers, rows, raw}. Sempre busca ao
+ * vivo — a planilha é a fonte da verdade, não mantemos cópia local.
  */
 export async function fetchSheetTables(
+  spreadsheetId: string,
   sheetNames: string[]
 ): Promise<Record<string, SheetTable>> {
-  if (!SPREADSHEET_ID) {
-    throw new Error("GOOGLE_SHEETS_SPREADSHEET_ID não configurado.")
+  if (!spreadsheetId) {
+    throw new Error("ID da planilha não configurado.")
   }
 
   const token = await getGoogleSheetsAccessToken()
 
   const ranges = sheetNames.map((name) => `${name}!A1:ZZ2000`)
   const url = new URL(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values:batchGet`
+    `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet`
   )
   ranges.forEach((r) => url.searchParams.append("ranges", r))
   url.searchParams.set("valueRenderOption", "FORMATTED_VALUE")

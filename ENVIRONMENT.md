@@ -37,12 +37,17 @@ Geração de clipes/imagens de apoio via Kairogen (acima). A **montagem/edição
 
 A página busca os dados **ao vivo** direto da planilha a cada carregamento — não há cópia local, a planilha é sempre a fonte da verdade.
 
-Autentica como o **usuário dono da planilha** via OAuth padrão de redirect (não é Service Account — a organização do Google Workspace bloqueia criação de chaves de service account via política `iam.disableServiceAccountKeyCreation`; e o escopo de planilhas também não é aceito no device flow). O refresh token fica na tabela `provider_tokens` do Supabase (mesmo esquema da Kairogen), não em `.env.local`.
+Autentica como o **usuário dono da planilha** via OAuth padrão de redirect (não é Service Account — a organização do Google Workspace bloqueia criação de chaves de service account via política `iam.disableServiceAccountKeyCreation`; e o escopo de planilhas também não é aceito no device flow). O refresh token fica na tabela `provider_tokens` do Supabase (mesmo esquema da Kairogen), não em `.env.local`. O mesmo token serve para qualquer planilha compartilhada com essa conta — não há um token por planilha.
+
+Suporta **múltiplas planilhas** como fonte, configuradas em `src/lib/sheets-config.ts` (`SHEET_SOURCES`). Cada fonte tem seu próprio ID de planilha:
 
 | Variável | Uso |
 |---|---|
 | `GOOGLE_SHEETS_CLIENT_ID` / `GOOGLE_SHEETS_CLIENT_SECRET` | Credenciais do OAuth Client (tipo "Aplicativo da Web") criado no Google Cloud Console. |
-| `GOOGLE_SHEETS_SPREADSHEET_ID` | ID da planilha (o trecho entre `/d/` e `/edit` na URL). |
+| `GOOGLE_SHEETS_SPREADSHEET_ID` | ID da planilha "Esteira de Mineração" (o trecho entre `/d/` e `/edit` na URL). |
+| `GOOGLE_SHEETS_SPREADSHEET_ID_SHORTLIST` | ID da planilha "Shortlist Pronix". |
+
+Para adicionar uma nova planilha como fonte: compartilhar com a conta autorizada, adicionar uma entrada em `SHEET_SOURCES` (`src/lib/sheets-config.ts`) com seu `envVar`, e configurar a variável correspondente aqui e na Vercel.
 
 Setup (gratuito): Google Cloud Console → projeto → ativar "Google Sheets API" → configurar a tela de consentimento OAuth (externo, com o próprio e-mail como usuário de teste, escopo `spreadsheets.readonly` adicionado em "Escopos") → criar um "ID do cliente OAuth" tipo "Aplicativo da Web" com os redirect URIs `http://localhost:3000/api/auth/google-sheets/callback` e `https://<seu-dominio>/api/auth/google-sheets/callback` → logado no Centro de Comando, acessar `/api/auth/google-sheets/start` e aprovar. Para reautorizar (ex.: trocar de conta), revogue o acesso em [myaccount.google.com/permissions](https://myaccount.google.com/permissions) antes.
 

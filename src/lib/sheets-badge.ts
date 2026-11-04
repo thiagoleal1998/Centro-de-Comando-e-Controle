@@ -1,14 +1,16 @@
 export type BadgeTone = "default" | "secondary" | "outline" | "destructive"
 
-const POSITIVE = /aprovad|comprar|forte|fecha\b|passa\b/i
-const WARNING = /observ|apert|pendente|amarelo/i
-const NEGATIVE = /descart|reprov|n[ãa]o fecha|vermelho|cr[íi]tico/i
-const NEUTRAL = /incompleto|aguardar|n[ãa]o contatado|n[ãa]o iniciado/i
+const POSITIVE = /aprovad|comprar|forte|fecha\b|passa|verde/i
+const WARNING = /observ|apert|pendente|amarelo|condicional|talvez/i
+const NEGATIVE = /descart|reprov|n[ãa]o fecha|vermelho|cr[íi]tico|bloquead/i
+const NEUTRAL = /incompleto|aguardar|n[ãa]o contatado|n[ãa]o iniciado|reserva|n[ãa]o agora/i
 
 export function statusTone(value: string): BadgeTone {
   if (NEGATIVE.test(value)) return "destructive"
-  if (POSITIVE.test(value)) return "default"
+  // Checado antes de POSITIVE: "PASSA_DVP_CONDICIONAL" tem "passa" (positivo)
+  // mas o "condicional" junto deve prevalecer como alerta, não aprovação plena.
   if (WARNING.test(value)) return "secondary"
+  if (POSITIVE.test(value)) return "default"
   if (NEUTRAL.test(value)) return "outline"
   return "outline"
 }

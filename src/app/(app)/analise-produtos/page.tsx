@@ -1,18 +1,11 @@
 import { AlertTriangle } from "lucide-react"
 
 import { fetchSheetTables, type SheetTable } from "@/lib/google-sheets"
-import {
-  SHEET_LABELS,
-  SHEET_NAMES,
-  SHEET_NEW_BADGE_COLUMN,
-  SHEET_PRIORITY_COLUMNS,
-  SHEET_REVERSE_ORDER,
-  SHEET_STATUS_COLUMNS,
-  SHEET_SUMMARY_COLUMN,
-} from "@/lib/sheets-config"
+import { SHEET_SOURCES, type SheetSourceConfig } from "@/lib/sheets-config"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SheetDataTable } from "@/components/sheets/sheet-data-table"
+import { SheetKeyValueCard } from "@/components/sheets/sheet-key-value-card"
 import { SheetSummary } from "@/components/sheets/sheet-summary"
 import {
   ViabilityCalculator,
@@ -53,62 +46,118 @@ function buildProductOptions(tables: Record<string, SheetTable>): ViabilityProdu
   return options
 }
 
-export default async function AnaliseProdutosPage() {
-  let tables: Record<string, SheetTable> | null = null
-  let error: string | null = null
+type SourceResult =
+  | { ok: true; tables: Record<string, SheetTable> }
+  | { ok: false; error: string }
+
+async function loadSource(config: SheetSourceConfig): Promise<SourceResult> {
+  const spreadsheetId = process.env[config.envVar]
+  if (!spreadsheetId) {
+    return { ok: false, error: `Variável de ambiente ${config.envVar} não configurada.` }
+  }
 
   try {
-    tables = await fetchSheetTables([...SHEET_NAMES])
+    const tables = await fetchSheetTables(spreadsheetId, [...config.sheetOrder])
+    return { ok: true, tables }
   } catch (err) {
-    error = err instanceof Error ? err.message : "Erro desconhecido."
+    return { ok: false, error: err instanceof Error ? err.message : "Erro desconhecido." }
   }
+}
+
+function SourceError({ message }: { message: string }) {
+  return (
+    <Card className="border-destructive/50">
+      <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
+        <AlertTriangle className="text-destructive size-8" />
+        <p className="text-sm font-medium">Não foi possível carregar a planilha</p>
+        <p className="text-muted-foreground max-w-md text-sm">{message}</p>
+      </CardContent>
+    </Card>
+  )
+}
+
+function SourceTabs({
+  config,
+  result,
+}: {
+  config: SheetSourceConfig
+  result: SourceResult
+}) {
+  if (!result.ok) {
+    return <SourceError message={result.error} />
+  }
+
+  const tables = result.tables
+
+  return (
+    <Tabs defaultValue={config.sheetOrder[0]}>
+      <TabsList className="h-auto flex-wrap">
+        {config.sheetOrder.map((name) => (
+          <TabsTrigger key={name} value={name}>
+            {config.labels[name] ?? name}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+      {config.sheetOrder.map((name) => (
+        <TabsContent key={name} value={name} className="flex flex-col gap-4 pt-4">
+          {config.summaryColumn[name] ? (
+            <SheetSummary table={tables[name]} column={config.summaryColumn[name]} />
+          ) : null}
+          {config.keyValueSheets.has(name) ? (
+            <SheetKeyValueCard table={tables[name]} />
+          ) : (
+            <SheetDataTable
+              table={tables[name]}
+              priorityColumns={config.priorityColumns[name] ?? []}
+              statusColumns={config.statusColumns[name] ?? []}
+              newBadgeColumn={config.newBadgeColumn[name]}
+              reverseOrder={config.reverseOrder.has(name)}
+            />
+          )}
+        </TabsContent>
+      ))}
+    </Tabs>
+  )
+}
+
+export default async function AnaliseProdutosPage() {
+  const [esteiraResult, shortlistResult] = await Promise.all([
+    loadSource(SHEET_SOURCES.esteira),
+    loadSource(SHEET_SOURCES.shortlist),
+  ])
+
+  const viabilityProducts = esteiraResult.ok
+    ? buildProductOptions(esteiraResult.tables)
+    : []
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight">Análise de Produtos</h1>
         <p className="text-muted-foreground text-sm">
-          Esteira de mineração de produtos — sincronizado ao vivo com a planilha do JT Group.
+          Sincronizado ao vivo com as planilhas do JT Group.
         </p>
       </div>
 
-      {error ? (
-        <Card className="border-destructive/50">
-          <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-            <AlertTriangle className="text-destructive size-8" />
-            <p className="text-sm font-medium">Não foi possível carregar a planilha</p>
-            <p className="text-muted-foreground max-w-md text-sm">{error}</p>
-          </CardContent>
-        </Card>
-      ) : tables ? (
-        <Tabs defaultValue="Viabilidade">
-          <TabsList className="h-auto flex-wrap">
-            <TabsTrigger value="Viabilidade">Viabilidade</TabsTrigger>
-            {SHEET_NAMES.map((name) => (
-              <TabsTrigger key={name} value={name}>
-                {SHEET_LABELS[name]}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <TabsContent value="Viabilidade" className="pt-4">
-            <ViabilityCalculator products={buildProductOptions(tables)} />
-          </TabsContent>
-          {SHEET_NAMES.map((name) => (
-            <TabsContent key={name} value={name} className="flex flex-col gap-4 pt-4">
-              {SHEET_SUMMARY_COLUMN[name] ? (
-                <SheetSummary table={tables![name]} column={SHEET_SUMMARY_COLUMN[name]} />
-              ) : null}
-              <SheetDataTable
-                table={tables![name]}
-                priorityColumns={SHEET_PRIORITY_COLUMNS[name] ?? []}
-                statusColumns={SHEET_STATUS_COLUMNS[name] ?? []}
-                newBadgeColumn={SHEET_NEW_BADGE_COLUMN[name]}
-                reverseOrder={SHEET_REVERSE_ORDER.has(name)}
-              />
-            </TabsContent>
-          ))}
-        </Tabs>
-      ) : null}
+      <Tabs defaultValue="esteira">
+        <TabsList className="h-auto flex-wrap">
+          <TabsTrigger value="esteira">{SHEET_SOURCES.esteira.label}</TabsTrigger>
+          <TabsTrigger value="shortlist">{SHEET_SOURCES.shortlist.label}</TabsTrigger>
+          <TabsTrigger value="viabilidade">Viabilidade</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="esteira" className="pt-4">
+          <SourceTabs config={SHEET_SOURCES.esteira} result={esteiraResult} />
+        </TabsContent>
+
+        <TabsContent value="shortlist" className="pt-4">
+          <SourceTabs config={SHEET_SOURCES.shortlist} result={shortlistResult} />
+        </TabsContent>
+
+        <TabsContent value="viabilidade" className="pt-4">
+          <ViabilityCalculator products={viabilityProducts} />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

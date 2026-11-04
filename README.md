@@ -5,7 +5,7 @@ Sistema interno da Neuro Botics (marca do **JT Group**). Reúne:
 - **Projetos** e **Produtos** — organização das campanhas e cadastro de produtos.
 - **Central Criativa** — briefing, geração de criativos (texto/imagem), preview, comandos em linguagem natural e versionamento, para Mercado Livre e Meta Ads/Cash on Delivery.
 - **Assets** — biblioteca central de imagens, vídeos e referências.
-- **Análise de Produtos** — sincronização ao vivo com a planilha de mineração de produtos (Google Sheets), incluindo uma calculadora de viabilidade/rentabilidade por modalidade de envio.
+- **Análise de Produtos** — sincronização ao vivo com múltiplas planilhas do Google Sheets (Esteira de Mineração, Shortlist Pronix), incluindo uma calculadora de viabilidade/rentabilidade por modalidade de envio.
 
 Veja [ARCHITECTURE.md](./ARCHITECTURE.md) para a arquitetura completa, [ENVIRONMENT.md](./ENVIRONMENT.md) para as variáveis de ambiente necessárias e [CHANGELOG.md](./CHANGELOG.md) para o histórico de versões.
 

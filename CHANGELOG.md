@@ -2,6 +2,17 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.3.0] — 2026-11-03
+
+### Adicionado
+- **Análise de Produtos** agora suporta múltiplas planilhas como fonte: além da "Esteira de Mineração", foi adicionada a planilha "Shortlist Pronix" (JT Magazine — Shortlist DVP + retorno Pronix), com suas 6 abas (Produtos, Resumo, Checklist de Fornecedores, Retorno Pronix, Como Decidir, Fluxo). A página agora tem um seletor de fonte (Esteira / Shortlist / Viabilidade) e cada fonte carrega e falha de forma independente.
+- Aba "Resumo" (e outras no formato chave/valor, sem header tabular) ganharam um card dedicado em vez da tabela genérica.
+- `statusTone()` (badges de status) ampliado para reconhecer o vocabulário da nova planilha: `PASSA_DVP_CONDICIONAL`, `BLOQUEADO_*`, `VERDE`, `TALVEZ`, `RESERVA`, `NÃO AGORA`.
+
+### Infraestrutura
+- `src/lib/sheets-config.ts` reestruturado de config fixa (uma planilha) para `SHEET_SOURCES`, um registro por fonte — cada uma com seu próprio ID de planilha (variável de ambiente), ordem de abas, colunas e regras de exibição.
+- `fetchSheetTables()` agora recebe o ID da planilha como parâmetro em vez de um valor fixo, permitindo buscar qualquer planilha autorizada com o mesmo token OAuth.
+
 ## [0.2.1] — 2026-11-03
 
 ### Adicionado
