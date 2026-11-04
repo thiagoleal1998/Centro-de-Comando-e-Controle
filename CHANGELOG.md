@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.2.1] — 2026-11-03
+
+### Adicionado
+- Página pública de Política de Privacidade (`/privacidade`), exigida pelo Google para publicar o app OAuth em modo "Em produção" (necessário porque o refresh token do Google Sheets expira em 7 dias em apps no modo "Testando" — descoberto ao vivo quando a sincronização parou de funcionar).
+
 ## [0.2.0] — 2026-11-03
 
 Primeira versão publicada no GitHub. Reúne todo o trabalho das sessões anteriores (sem histórico de commits prévio).

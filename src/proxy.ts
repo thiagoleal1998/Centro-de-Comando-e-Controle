@@ -1,7 +1,13 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
-const PUBLIC_PATHS = ["/login"]
+// Acessível sem login.
+const PUBLIC_PATHS = ["/login", "/privacidade"]
+// Dentre as públicas, essas mandam o usuário já logado para o dashboard
+// (não faz sentido ver a tela de login estando logado; já /privacidade
+// precisa ficar acessível também para quem está logado, e para o Google
+// revisar a página sem autenticação).
+const REDIRECT_IF_LOGGED_IN_PATHS = ["/login"]
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request })
@@ -34,13 +40,16 @@ export async function proxy(request: NextRequest) {
   const isPublicPath = PUBLIC_PATHS.some((path) =>
     request.nextUrl.pathname.startsWith(path)
   )
+  const shouldRedirectIfLoggedIn = REDIRECT_IF_LOGGED_IN_PATHS.some((path) =>
+    request.nextUrl.pathname.startsWith(path)
+  )
 
   if (!user && !isPublicPath && request.nextUrl.pathname !== "/") {
     const loginUrl = new URL("/login", request.url)
     return NextResponse.redirect(loginUrl)
   }
 
-  if (user && isPublicPath) {
+  if (user && shouldRedirectIfLoggedIn) {
     return NextResponse.redirect(new URL("/dashboard", request.url))
   }
 
