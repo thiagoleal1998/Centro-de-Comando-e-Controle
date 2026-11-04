@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.4.0] — 2026-11-03
+
+### Adicionado
+- **Organograma** — nova área no menu principal mostrando a estrutura organizacional da Neuro Botics (Conselho Administrativo, Diretoria, Operações e as abas Administrativo/Financeira/RH), com cards de pessoa/cargo conectados em árvore.
+
 ## [0.3.1] — 2026-11-03
 
 ### Removido

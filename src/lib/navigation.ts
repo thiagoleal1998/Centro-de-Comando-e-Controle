@@ -4,6 +4,7 @@ import {
   Images,
   Package,
   Radar,
+  Network,
   Settings,
   type LucideIcon,
 } from "lucide-react"
@@ -46,6 +47,12 @@ export const mainNav: NavItem[] = [
     href: "/analise-produtos",
     icon: Radar,
     description: "Esteira de mineração e validação de produtos (planilha JT).",
+  },
+  {
+    title: "Organograma",
+    href: "/organograma",
+    icon: Network,
+    description: "Estrutura organizacional da Neuro Botics.",
   },
 ]
 
