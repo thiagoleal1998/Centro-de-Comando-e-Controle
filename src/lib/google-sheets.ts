@@ -13,7 +13,16 @@ function rangeToTable(values: string[][] | undefined): SheetTable {
     return { headers: [], rows: [], raw: [] }
   }
 
-  const [headerRow, ...dataRows] = values
+  // Algumas abas têm uma (ou mais) linha em branco antes do cabeçalho de
+  // verdade (ex.: um título solto na linha 1) — usar sempre a primeira
+  // linha com algum conteúdo em vez de assumir que é a linha 0.
+  const headerIndex = values.findIndex((row) => row.some((cell) => cell?.trim()))
+  if (headerIndex === -1) {
+    return { headers: [], rows: [], raw: values }
+  }
+
+  const headerRow = values[headerIndex]
+  const dataRows = values.slice(headerIndex + 1)
   const headers = headerRow.map((h) => h.trim())
 
   const rows = dataRows

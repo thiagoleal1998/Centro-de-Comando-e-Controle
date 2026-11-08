@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.5.2] — 2026-11-07
+
+### Corrigido
+- O gráfico de Vendas Brutas não carregava dados. Causa: a aba "Dados de vendas Brutas" tem uma linha em branco antes do cabeçalho de verdade, e `rangeToTable()` assumia que a primeira linha da planilha é sempre o cabeçalho — com isso, `headers`/`rows` saíam vazios para essa aba (o `raw`, usado pelas outras visualizações, não era afetado). Corrigido para usar a primeira linha com conteúdo como cabeçalho, em vez da linha 0.
+
 ## [0.5.1] — 2026-11-07
 
 ### Alterado
