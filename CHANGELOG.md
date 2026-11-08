@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.6.2] — 2026-11-07
+
+### Corrigido
+- Dashboard mensal (Abril-Julho) deixava de fora boa parte do painel de metas da planilha original (MÊS ANTERIOR, LÍQUIDO PREVISTO, DESPESAS PREVISTAS, Dias corridos/Realizados/Restantes, e até REALIZADO/MARGEM por causa de uma terminação de palavra diferente). A extração de KPIs usava uma lista fixa de palavras-chave; trocada por uma detecção pelo FORMATO da linha (poucos valores = KPI, dezenas de valores = linha de produto na grade diária), que captura qualquer rótulo do painel sem depender de adivinhar o texto exato.
+
 ## [0.6.1] — 2026-11-07
 
 ### Adicionado

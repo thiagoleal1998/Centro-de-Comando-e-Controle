@@ -4,11 +4,13 @@ import { formatBrl, parseBrNumber } from "@/lib/format"
 import { ProductDayGrid } from "@/components/sheets/product-day-grid"
 import type { SheetTable } from "@/lib/google-sheets"
 
-const KPI_LABEL_RE = /meta|realizado|proje[çc][ãa]o|margem|rentabilidade|resultado/i
+const KPI_LABEL_RE = /meta|realizad|proje[çc][ãa]o|margem|rentabilidade|resultado/i
 const STRUCTURAL_ROW_RE =
   /^(di[áa]rio|agregado|parcial\/dia bruto|unidades vendidas)$/i
 const CURRENCY_RE = /^-?R\$\s?-?[\d.,]+$/
 const PERCENT_RE = /^-?[\d.,]+\s?%$/
+const DATE_RE = /^\d{1,2}\/\d{1,2}(\/\d{2,4})?$/
+const INTEGER_RE = /^-?\d+$/
 
 function isCurrency(v: string | undefined): boolean {
   return !!v && CURRENCY_RE.test(v.trim())
@@ -20,24 +22,42 @@ function isValueish(v: string | undefined): boolean {
   return CURRENCY_RE.test(t) || PERCENT_RE.test(t)
 }
 
+// Um valor de KPI pode ser moeda, porcentagem, um inteiro solto (ex.: "Dias
+// corridos: 30") ou uma data (ex.: "Hoje: 30/04/2026").
+function isKpiValue(v: string | undefined): boolean {
+  if (!v) return false
+  const t = v.trim()
+  return CURRENCY_RE.test(t) || PERCENT_RE.test(t) || INTEGER_RE.test(t) || DATE_RE.test(t)
+}
+
 type Kpi = { label: string; value: string }
 
 /**
- * Esta aba tem um "dashboard" solto no meio da grade: células de rótulo
- * (ex.: "META FAT. / MÊS") seguidas, na célula ao lado, do valor. Varre a
- * grade inteira procurando esse padrão em vez de depender de posições
- * fixas — os rótulos exatos variam um pouco entre os meses.
+ * Esta aba tem um painel de KPIs solto no meio da grade: células de rótulo
+ * (ex.: "META FAT. / MÊS", "DESPESAS PREVISTAS", "Dias corridos") seguidas,
+ * na célula ao lado, do valor. Os rótulos exatos variam bastante — em vez
+ * de tentar listar todos, usa o FORMATO da linha para distinguir: uma linha
+ * de produto tem dezenas de valores (um por bloco de dia), enquanto uma
+ * linha de KPI tem só 1-2. Isso pega qualquer rótulo do painel sem
+ * confundir com a grade diária de produtos.
  */
 function extractKpis(raw: string[][]): Kpi[] {
   const seen = new Set<string>()
   const kpis: Kpi[] = []
 
   for (const row of raw) {
+    const dateCount = row.filter((c) => c?.trim() && DATE_RE.test(c.trim())).length
+    if (dateCount >= 2) continue // linha de cabeçalho dos dias, não um KPI
+
+    const valueCount = row.filter((c) => isKpiValue(c)).length
+    if (valueCount === 0 || valueCount > 4) continue // 0 = nada aqui; muitos = linha de produto
+
     row.forEach((cell, col) => {
       const label = cell?.trim()
-      if (!label || label.length > 40 || !KPI_LABEL_RE.test(label)) return
+      if (!label || label.length < 3 || label.length > 50) return
+      if (isKpiValue(label)) return
       const value = row[col + 1]?.trim()
-      if (!isValueish(value)) return
+      if (!isKpiValue(value)) return
       const key = label.toLowerCase()
       if (seen.has(key)) return
       seen.add(key)

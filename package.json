@@ -1,6 +1,6 @@
 {
   "name": "centro-comando-controle",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
