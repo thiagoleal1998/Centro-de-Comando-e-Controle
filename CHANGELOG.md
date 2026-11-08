@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.6.5] — 2026-11-07
+
+### Corrigido
+- Ainda vazavam produtos como card de KPI (Descascador Elétrico, Ovo de Páscoa, Álbum e Figurinha da Copa, Copo Térmico Brasil) — vêm de uma mini-tabela de produtos à parte na planilha, fora das colunas onde fica a grade principal, então o cruzamento por nome da correção anterior não os via. Linhas com 2-5 valores em R$ agora só viram KPI se o rótulo tiver cara de métrica de negócio (meta, despesa, margem, líquido, mês, dia, etc.) — testado com o cenário exato reportado antes de publicar.
+
 ## [0.6.4] — 2026-11-07
 
 ### Corrigido

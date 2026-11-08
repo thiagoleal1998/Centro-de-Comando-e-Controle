@@ -5,6 +5,11 @@ import { ProductDayGrid } from "@/components/sheets/product-day-grid"
 import type { SheetTable } from "@/lib/google-sheets"
 
 const KPI_LABEL_RE = /meta|realizad|proje[çc][ãa]o|margem|rentabilidade|resultado/i
+// Versão ampliada, usada só pra "zona ambígua" (linha com 2-5 valores) em
+// extractKpis — cobre rótulos que o regex acima deixa passar (despesas,
+// líquido, mês, dias, hoje...).
+const KPI_HINT_RE =
+  /meta|realizad|proje[çc][ãa]o|margem|rentabilidade|resultado|despesa|l[íi]quido|m[êe]s|dia|hoje|super|acompanhamento/i
 const STRUCTURAL_ROW_RE =
   /^(di[áa]rio|agregado|parcial\/dia bruto|unidades vendidas)$/i
 const CURRENCY_RE = /^-?R\$\s?-?[\d.,]+$/
@@ -62,10 +67,14 @@ function findAdjacentValue(row: string[], labelCol: number): string | undefined 
  * diária de produtos (nome de produto + vários valores em R$) e trata o
  * resto como candidato a par rótulo/valor.
  *
- * `productNames` são os produtos já identificados por extractProductTotals —
- * produtos com poucas vendas no mês (poucas células em R$ na linha) não
- * batem o limiar de "linha de produto" por contagem, então são filtrados
- * aqui cruzando pelo nome em vez de depender só da contagem.
+ * Há também uma MINI-TABELA de produtos à parte (fora das colunas 1-3 onde
+ * fica a grade principal), com poucas colunas de valor por produto — não
+ * dá pra reconhecê-la só pela contagem de valores (muito parecida com um
+ * KPI de verdade), então linhas com 2-5 valores só viram KPI se o rótulo
+ * tiver cara de métrica de negócio (KPI_HINT_RE); linhas com 0-1 valor
+ * passam direto (um KPI real pode não ter nenhuma palavra-chave, ex.:
+ * "Hoje"). `productNames` cobre ainda os casos óbvios vindos da grade
+ * principal (extractProductTotals).
  */
 function extractKpis(raw: string[][], productNames: Set<string>): Kpi[] {
   const seen = new Set<string>()
@@ -76,13 +85,16 @@ function extractKpis(raw: string[][], productNames: Set<string>): Kpi[] {
     if (dateCount >= 2) continue // linha de cabeçalho dos dias, não um KPI
     if (looksLikeProductRow(row)) continue
 
+    const currencyCount = row.filter((c) => isCurrency(c)).length
+
     row.forEach((cell, col) => {
       const label = cell?.trim()
       if (!label || label.length < 3 || label.length > 50) return
       if (label.startsWith("#")) return // erro de fórmula (#DIV/0!, #REF!...), não um rótulo
       if (isKpiValue(label)) return
       const key = label.toLowerCase()
-      if (productNames.has(key)) return // é um produto com poucas vendas, não um KPI
+      if (productNames.has(key)) return // é um produto da grade principal
+      if (currencyCount >= 2 && !KPI_HINT_RE.test(label)) return // zona ambígua sem cara de KPI
       const value = findAdjacentValue(row, col)
       if (!value) return
       if (seen.has(key)) return
