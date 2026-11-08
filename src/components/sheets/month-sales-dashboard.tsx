@@ -61,8 +61,13 @@ function findAdjacentValue(row: string[], labelCol: number): string | undefined 
  * de tentar listar todos, pula só as linhas que claramente são da grade
  * diária de produtos (nome de produto + vários valores em R$) e trata o
  * resto como candidato a par rótulo/valor.
+ *
+ * `productNames` são os produtos já identificados por extractProductTotals —
+ * produtos com poucas vendas no mês (poucas células em R$ na linha) não
+ * batem o limiar de "linha de produto" por contagem, então são filtrados
+ * aqui cruzando pelo nome em vez de depender só da contagem.
  */
-function extractKpis(raw: string[][]): Kpi[] {
+function extractKpis(raw: string[][], productNames: Set<string>): Kpi[] {
   const seen = new Set<string>()
   const kpis: Kpi[] = []
 
@@ -74,10 +79,12 @@ function extractKpis(raw: string[][]): Kpi[] {
     row.forEach((cell, col) => {
       const label = cell?.trim()
       if (!label || label.length < 3 || label.length > 50) return
+      if (label.startsWith("#")) return // erro de fórmula (#DIV/0!, #REF!...), não um rótulo
       if (isKpiValue(label)) return
+      const key = label.toLowerCase()
+      if (productNames.has(key)) return // é um produto com poucas vendas, não um KPI
       const value = findAdjacentValue(row, col)
       if (!value) return
-      const key = label.toLowerCase()
       if (seen.has(key)) return
       seen.add(key)
       kpis.push({ label, value })
@@ -127,8 +134,9 @@ function extractProductTotals(raw: string[][]): ProductTotal[] {
 }
 
 export function MonthSalesDashboard({ table }: { table: SheetTable }) {
-  const kpis = extractKpis(table.raw)
   const products = extractProductTotals(table.raw)
+  const productNames = new Set(products.map((p) => p.product.toLowerCase()))
+  const kpis = extractKpis(table.raw, productNames)
   const maxProduct = Math.max(1, ...products.map((p) => p.total))
 
   if (kpis.length === 0 && products.length === 0) {

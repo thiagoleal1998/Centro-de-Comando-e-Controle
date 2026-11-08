@@ -2,6 +2,12 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.6.4] — 2026-11-07
+
+### Corrigido
+- Produtos com poucas vendas no mês (poucas células em R$ na linha, abaixo do limiar que identifica "linha de produto") apareciam como cards de KPI por engano. Agora a extração de KPIs cruza com a lista de produtos já identificada e descarta qualquer rótulo que seja na verdade um nome de produto.
+- Removido o card espúrio "#DIV/0!" (erro de fórmula da planilha sendo tratado como rótulo).
+
 ## [0.6.3] — 2026-11-07
 
 ### Corrigido
