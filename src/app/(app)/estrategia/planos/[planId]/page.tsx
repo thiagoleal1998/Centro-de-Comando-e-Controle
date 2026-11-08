@@ -2,7 +2,11 @@ import { notFound } from "next/navigation"
 import { Pencil } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
-import { createStrategyExpense, updateStrategyPlan } from "@/lib/actions/strategy"
+import {
+  createStrategyExpense,
+  createStrategyProfitSplit,
+  updateStrategyPlan,
+} from "@/lib/actions/strategy"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
@@ -13,10 +17,11 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { StrategyExpenseForm } from "@/components/strategy/strategy-expense-form"
+import { StrategyProfitSplitForm } from "@/components/strategy/strategy-profit-split-form"
 import { StrategyPlanForm } from "@/components/strategy/strategy-plan-form"
 import { StrategyPlanDashboard } from "@/components/strategy/strategy-plan-dashboard"
 import { DeleteStrategyPlanButton } from "@/components/strategy/delete-strategy-plan-button"
-import type { StrategyPlan, StrategyPlanExpense } from "@/types/domain"
+import type { StrategyPlan, StrategyPlanExpense, StrategyPlanProfitSplit } from "@/types/domain"
 
 export const dynamic = "force-dynamic"
 
@@ -38,15 +43,23 @@ export default async function PlanoDetalhePage({
     notFound()
   }
 
-  const { data: expenses } = await supabase
-    .from("strategy_plan_expenses")
-    .select("*")
-    .eq("plan_id", planId)
-    .order("created_at", { ascending: true })
+  const [{ data: expenses }, { data: profitSplits }] = await Promise.all([
+    supabase
+      .from("strategy_plan_expenses")
+      .select("*")
+      .eq("plan_id", planId)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("strategy_plan_profit_splits")
+      .select("*")
+      .eq("plan_id", planId)
+      .order("created_at", { ascending: true }),
+  ])
 
   const typedPlan = plan as StrategyPlan
   const boundUpdate = updateStrategyPlan.bind(null, typedPlan.id)
   const boundCreateExpense = createStrategyExpense.bind(null, typedPlan.id)
+  const boundCreateProfitSplit = createStrategyProfitSplit.bind(null, typedPlan.id)
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6">
@@ -92,9 +105,19 @@ export default async function PlanoDetalhePage({
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Adicionar divisão de lucro</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StrategyProfitSplitForm action={boundCreateProfitSplit} />
+        </CardContent>
+      </Card>
+
       <StrategyPlanDashboard
         plan={typedPlan}
         expenses={(expenses as StrategyPlanExpense[]) ?? []}
+        profitSplits={(profitSplits as StrategyPlanProfitSplit[]) ?? []}
       />
     </div>
   )

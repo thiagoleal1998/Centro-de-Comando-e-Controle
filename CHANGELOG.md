@@ -2,6 +2,17 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.8.2] — 2026-11-08
+
+### Corrigido
+- Fórmula do faturamento necessário (Planos de Estratégia) não garantia o lucro desejado depois de pagar as despesas listadas — ex.: lucro de R$20.000 a 10% de rentabilidade dava R$200.000, mas descontando R$1.644 de despesas sobrava só R$18.356 líquido. Corrigida para (lucro desejado + despesas) ÷ rentabilidade, garantindo o lucro líquido pretendido.
+
+### Adicionado
+- **Divisão do lucro** nos Planos — adicione sócios/empresa com um percentual cada (ex.: Thiago 40%, Jonas 40%, Empresa 10%); o painel mostra quanto cada um recebe do lucro desejado.
+
+### Infraestrutura
+- Tabela `strategy_plan_profit_splits` — migration `supabase/migrations/0008_strategy_plan_profit_split.sql`. **Precisa ser aplicada manualmente no SQL Editor do Supabase.**
+
 ## [0.8.1] — 2026-11-07
 
 ### Alterado

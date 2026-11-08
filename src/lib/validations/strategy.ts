@@ -26,3 +26,13 @@ export const strategyExpenseSchema = z.object({
 })
 
 export type StrategyExpenseInput = z.infer<typeof strategyExpenseSchema>
+
+export const strategyProfitSplitSchema = z.object({
+  name: z.string().trim().min(2, "Informe um nome com pelo menos 2 caracteres."),
+  percentage: z.coerce
+    .number()
+    .min(0, "Percentual não pode ser negativo.")
+    .max(100, "Percentual não pode passar de 100."),
+})
+
+export type StrategyProfitSplitInput = z.infer<typeof strategyProfitSplitSchema>

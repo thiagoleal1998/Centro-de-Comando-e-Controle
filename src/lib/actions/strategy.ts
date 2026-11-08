@@ -4,7 +4,11 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
 import { createClient } from "@/lib/supabase/server"
-import { strategyExpenseSchema, strategyPlanSchema } from "@/lib/validations/strategy"
+import {
+  strategyExpenseSchema,
+  strategyPlanSchema,
+  strategyProfitSplitSchema,
+} from "@/lib/validations/strategy"
 
 export type ActionState = { error?: string } | undefined
 
@@ -156,6 +160,58 @@ export async function deleteStrategyExpense(planId: string, expenseId: string) {
 
   if (error) {
     throw new Error(`Não foi possível excluir a despesa: ${error.message}`)
+  }
+
+  revalidatePath(`/estrategia/planos/${planId}`)
+}
+
+export async function createStrategyProfitSplit(
+  planId: string,
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const parsed = strategyProfitSplitSchema.safeParse({
+    name: formData.get("name"),
+    percentage: formData.get("percentage"),
+  })
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos." }
+  }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: "Sessão expirada. Faça login novamente." }
+  }
+
+  const { error } = await supabase.from("strategy_plan_profit_splits").insert({
+    plan_id: planId,
+    name: parsed.data.name,
+    percentage: parsed.data.percentage,
+    created_by: user.id,
+  })
+
+  if (error) {
+    return { error: `Não foi possível adicionar a divisão: ${error.message}` }
+  }
+
+  revalidatePath(`/estrategia/planos/${planId}`)
+  return { error: undefined }
+}
+
+export async function deleteStrategyProfitSplit(planId: string, splitId: string) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from("strategy_plan_profit_splits")
+    .delete()
+    .eq("id", splitId)
+
+  if (error) {
+    throw new Error(`Não foi possível excluir a divisão: ${error.message}`)
   }
 
   revalidatePath(`/estrategia/planos/${planId}`)

@@ -146,3 +146,13 @@ export type StrategyPlanExpense = {
   created_at: string
   updated_at: string
 }
+
+export type StrategyPlanProfitSplit = {
+  id: string
+  plan_id: string
+  name: string
+  percentage: number
+  created_by: string
+  created_at: string
+  updated_at: string
+}

@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/table"
 import { formatBrl } from "@/lib/format"
 import { DeleteStrategyExpenseButton } from "@/components/strategy/delete-strategy-expense-button"
-import type { StrategyPlan, StrategyPlanExpense } from "@/types/domain"
+import { DeleteStrategyProfitSplitButton } from "@/components/strategy/delete-strategy-profit-split-button"
+import type { StrategyPlan, StrategyPlanExpense, StrategyPlanProfitSplit } from "@/types/domain"
 
 function Kpi({
   label,
@@ -36,20 +37,27 @@ function Kpi({
 export function StrategyPlanDashboard({
   plan,
   expenses,
+  profitSplits,
 }: {
   plan: StrategyPlan
   expenses: StrategyPlanExpense[]
+  profitSplits: StrategyPlanProfitSplit[]
 }) {
   const totalExpenses = expenses.reduce((sum, e) => sum + e.monthly_amount, 0)
   const targetProfit = plan.target_profit ?? 0
   const hasMargin = plan.target_margin_pct !== null && plan.target_margin_pct > 0
 
-  // Com rentabilidade informada: lucro = faturamento x rentabilidade, então
-  // faturamento necessário = lucro desejado ÷ rentabilidade. Sem ela, cai
-  // de volta pra aproximação por despesas + lucro.
+  // Com rentabilidade informada: lucro LÍQUIDO = faturamento x rentabilidade
+  // - despesas (as despesas listadas aqui são custos fixos fora da conta de
+  // rentabilidade, ex.: assinaturas, contabilidade). Pra atingir o lucro
+  // desejado de verdade (depois de pagar essas despesas), o faturamento
+  // precisa cobrir lucro + despesas antes de dividir pela rentabilidade —
+  // senão sobra menos que o lucro desejado depois de pagar as despesas.
   const requiredRevenue = hasMargin
-    ? targetProfit / (plan.target_margin_pct! / 100)
+    ? (targetProfit + totalExpenses) / (plan.target_margin_pct! / 100)
     : totalExpenses + targetProfit
+
+  const totalSplitPct = profitSplits.reduce((sum, s) => sum + s.percentage, 0)
 
   return (
     <div className="flex flex-col gap-5">
@@ -66,7 +74,11 @@ export function StrategyPlanDashboard({
         <Kpi
           label="Faturamento necessário"
           value={formatBrl(requiredRevenue)}
-          sublabel={hasMargin ? "lucro ÷ rentabilidade" : "despesas + lucro (sem rentabilidade)"}
+          sublabel={
+            hasMargin
+              ? "(lucro + despesas) ÷ rentabilidade"
+              : "despesas + lucro (sem rentabilidade)"
+          }
           highlight
         />
       </div>
@@ -96,6 +108,49 @@ export function StrategyPlanDashboard({
                     </TableCell>
                     <TableCell>
                       <DeleteStrategyExpenseButton planId={plan.id} expenseId={e.id} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="py-5">
+          <div className="mb-3 flex items-baseline justify-between gap-2">
+            <p className="text-sm font-semibold">Divisão do lucro ({profitSplits.length})</p>
+            {profitSplits.length > 0 ? (
+              <p className="text-muted-foreground text-xs">
+                {totalSplitPct.toLocaleString("pt-BR")}% alocado
+              </p>
+            ) : null}
+          </div>
+          {profitSplits.length === 0 ? (
+            <p className="text-muted-foreground text-sm">Nenhuma divisão adicionada ainda.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Sócio / empresa</TableHead>
+                  <TableHead className="text-right">Percentual</TableHead>
+                  <TableHead className="text-right">Valor do lucro desejado</TableHead>
+                  <TableHead className="w-8" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {profitSplits.map((s) => (
+                  <TableRow key={s.id}>
+                    <TableCell>{s.name}</TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {s.percentage.toLocaleString("pt-BR")}%
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">
+                      {formatBrl((targetProfit * s.percentage) / 100)}
+                    </TableCell>
+                    <TableCell>
+                      <DeleteStrategyProfitSplitButton planId={plan.id} splitId={s.id} />
                     </TableCell>
                   </TableRow>
                 ))}
