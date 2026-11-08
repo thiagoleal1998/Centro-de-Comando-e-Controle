@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.6.1] — 2026-11-07
+
+### Adicionado
+- Dashboard mensal (Abril-Julho, em Vendas) ganhou uma grade "Vendas por produto e dia" — cada célula mostra unidades (ou faturamento, com um botão pra alternar) por produto/dia, com intensidade de cor proporcional ao valor e tooltip com os dois números ao passar o mouse. Identifica o bloco de colunas de cada dia pela distância até a próxima data no cabeçalho, e dentro do bloco reconhece faturamento/quantidade pelo formato da célula (R$ vs. número puro) em vez de uma posição fixa — mais resistente a blocos de largura inconsistente entre os meses.
+
 ## [0.6.0] — 2026-11-07
 
 ### Alterado

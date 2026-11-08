@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { formatBrl, parseBrNumber } from "@/lib/format"
+import { ProductDayGrid } from "@/components/sheets/product-day-grid"
 import type { SheetTable } from "@/lib/google-sheets"
 
 const KPI_LABEL_RE = /meta|realizado|proje[çc][ãa]o|margem|rentabilidade|resultado/i
@@ -149,10 +150,7 @@ export function MonthSalesDashboard({ table }: { table: SheetTable }) {
         </Card>
       ) : null}
 
-      <p className="text-muted-foreground text-xs">
-        O detalhe dia a dia (90+ colunas) não é mostrado aqui — abra a planilha original para
-        ver tudo ou editar.
-      </p>
+      <ProductDayGrid table={table} />
     </div>
   )
 }
