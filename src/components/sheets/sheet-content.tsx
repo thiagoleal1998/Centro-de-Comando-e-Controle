@@ -2,6 +2,7 @@ import { AlertTriangle } from "lucide-react"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { SheetSmartTable } from "@/components/sheets/sheet-smart-table"
+import { SheetItemCards } from "@/components/sheets/sheet-item-cards"
 import { ProjecaoCards } from "@/components/sheets/projecao-cards"
 import { VendasBrutasChart } from "@/components/sheets/vendas-brutas-chart"
 import { MonthSalesDashboard } from "@/components/sheets/month-sales-dashboard"
@@ -16,6 +17,8 @@ export function SheetContent({ sheet, table }: { sheet: SalesSheet; table: Sheet
       return <VendasBrutasChart table={table} />
     case "month-dashboard":
       return <MonthSalesDashboard table={table} />
+    case "item-cards":
+      return <SheetItemCards table={table} />
     default:
       return <SheetSmartTable table={table} />
   }

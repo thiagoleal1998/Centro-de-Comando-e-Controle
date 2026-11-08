@@ -2,6 +2,14 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.7.1] — 2026-11-07
+
+### Adicionado
+- Despesas e Compras (Financeira) agora mostram cada item como um card — nome em destaque, badges para colunas de texto (Banco, Vencimento, Forma de Pagamento etc.) e uma mini barra por coluna monetária, em vez de uma tabela densa. Não inventa nenhum total novo — só reapresenta o mesmo valor de cada célula de forma mais visual (nem a planilha nomeia a maioria dos meses, então as barras não são rotuladas, mas o valor exato aparece ao passar o mouse). Botão "Ver como tabela" alterna para a visão detalhada quando precisar.
+
+### Infraestrutura
+- Detecção de cabeçalho/colunas vazias extraída para `src/lib/sheet-table-detect.ts`, compartilhada entre `SheetSmartTable` e o novo `SheetItemCards`.
+
 ## [0.7.0] — 2026-11-07
 
 ### Adicionado

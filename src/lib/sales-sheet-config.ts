@@ -5,7 +5,7 @@
 
 export const VENDAS_ENV_VAR = "GOOGLE_SHEETS_SPREADSHEET_ID_VENDAS"
 
-export type SalesSheetRender = "smart" | "cards" | "chart" | "month-dashboard"
+export type SalesSheetRender = "smart" | "cards" | "chart" | "month-dashboard" | "item-cards"
 
 export type SalesSheet = {
   name: string
@@ -22,8 +22,8 @@ export const ESTRATEGIA_SHEETS: SalesSheet[] = [
 ]
 
 export const FINANCEIRO_VENDAS_SHEETS: SalesSheet[] = [
-  { name: "Despesas", label: "Despesas" },
-  { name: "Compras", label: "Compras" },
+  { name: "Despesas", label: "Despesas", render: "item-cards" },
+  { name: "Compras", label: "Compras", render: "item-cards" },
 ]
 
 export const VENDAS_BRUTAS_SHEET: SalesSheet = {
