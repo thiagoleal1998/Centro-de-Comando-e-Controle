@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.5.3] — 2026-11-07
+
+### Removido
+- Abas Produtos e Promotores removidas da página Vendas (a critério do usuário).
+
 ## [0.5.2] — 2026-11-07
 
 ### Corrigido

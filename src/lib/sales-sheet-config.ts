@@ -28,8 +28,6 @@ export const FINANCEIRO_VENDAS_SHEETS: SalesSheet[] = [
 
 export const VENDAS_SHEETS: SalesSheet[] = [
   { name: "Dados de vendas Brutas", label: "Vendas Brutas", render: "chart" },
-  { name: "Produtos", label: "Produtos" },
-  { name: "Promotores", label: "Promotores" },
   { name: "Abril", label: "Abril" },
   { name: "Maio", label: "Maio" },
   { name: "Junho", label: "Junho" },
