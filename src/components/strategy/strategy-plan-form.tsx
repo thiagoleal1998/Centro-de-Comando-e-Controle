@@ -45,22 +45,38 @@ export function StrategyPlanForm({
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label htmlFor="targetProfit">Lucro desejado por mês (R$)</Label>
-        <Input
-          id="targetProfit"
-          name="targetProfit"
-          type="number"
-          step="0.01"
-          min="0"
-          defaultValue={plan?.target_profit ?? ""}
-          placeholder="5000"
-          className="max-w-48"
-        />
-        <p className="text-muted-foreground text-xs">
-          Usado para calcular o faturamento necessário (despesas + lucro desejado).
-        </p>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="targetProfit">Lucro desejado por mês (R$)</Label>
+          <Input
+            id="targetProfit"
+            name="targetProfit"
+            type="number"
+            step="0.01"
+            min="0"
+            defaultValue={plan?.target_profit ?? ""}
+            placeholder="20000"
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="targetMarginPct">Rentabilidade (% do faturamento)</Label>
+          <Input
+            id="targetMarginPct"
+            name="targetMarginPct"
+            type="number"
+            step="0.01"
+            min="0"
+            max="100"
+            defaultValue={plan?.target_margin_pct ?? ""}
+            placeholder="10"
+          />
+        </div>
       </div>
+      <p className="text-muted-foreground -mt-3 text-xs">
+        Faturamento necessário = lucro desejado ÷ rentabilidade. Ex.: lucrar R$ 20.000 com 10% de
+        rentabilidade exige R$ 200.000 de faturamento. Sem rentabilidade informada, usa despesas +
+        lucro desejado como aproximação.
+      </p>
 
       {state?.error ? <p className="text-destructive text-sm">{state.error}</p> : null}
 

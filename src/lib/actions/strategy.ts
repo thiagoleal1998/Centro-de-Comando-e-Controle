@@ -22,6 +22,7 @@ export async function createStrategyPlan(
     name: formData.get("name"),
     description: formData.get("description"),
     targetProfit: formData.get("targetProfit"),
+    targetMarginPct: formData.get("targetMarginPct"),
   })
 
   if (!parsed.success) {
@@ -43,6 +44,7 @@ export async function createStrategyPlan(
       name: parsed.data.name,
       description: parsed.data.description || null,
       target_profit: toNumberOrNull(parsed.data.targetProfit),
+      target_margin_pct: toNumberOrNull(parsed.data.targetMarginPct),
       created_by: user.id,
     })
     .select("id")
@@ -65,6 +67,7 @@ export async function updateStrategyPlan(
     name: formData.get("name"),
     description: formData.get("description"),
     targetProfit: formData.get("targetProfit"),
+    targetMarginPct: formData.get("targetMarginPct"),
   })
 
   if (!parsed.success) {
@@ -78,6 +81,7 @@ export async function updateStrategyPlan(
       name: parsed.data.name,
       description: parsed.data.description || null,
       target_profit: toNumberOrNull(parsed.data.targetProfit),
+      target_margin_pct: toNumberOrNull(parsed.data.targetMarginPct),
       updated_at: new Date().toISOString(),
     })
     .eq("id", planId)

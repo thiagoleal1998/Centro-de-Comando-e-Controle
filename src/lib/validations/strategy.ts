@@ -14,6 +14,7 @@ export const strategyPlanSchema = z.object({
   name: z.string().trim().min(2, "Informe um nome com pelo menos 2 caracteres."),
   description: z.string().trim().max(4000).optional().or(z.literal("")),
   targetProfit: optionalNumber("Lucro desejado inválido."),
+  targetMarginPct: optionalNumber("Rentabilidade inválida."),
 })
 
 export type StrategyPlanInput = z.infer<typeof strategyPlanSchema>

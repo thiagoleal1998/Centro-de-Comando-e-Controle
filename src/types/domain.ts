@@ -130,6 +130,7 @@ export type StrategyPlan = {
   name: string
   description: string | null
   target_profit: number | null
+  target_margin_pct: number | null
   created_by: string
   created_at: string
   updated_at: string

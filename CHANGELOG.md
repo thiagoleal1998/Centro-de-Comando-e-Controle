@@ -2,6 +2,14 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.8.1] — 2026-11-07
+
+### Alterado
+- Planos (Estratégia) ganharam o campo **Rentabilidade (%)**. Com ele preenchido, o faturamento necessário passa a ser calculado como lucro desejado ÷ rentabilidade (ex.: lucrar R$ 20.000 com 10% de rentabilidade exige R$ 200.000 de faturamento), em vez de despesas + lucro — reflete melhor como o lucro se relaciona com o vendido bruto. Sem rentabilidade informada, mantém o cálculo anterior (despesas + lucro) como aproximação.
+
+### Infraestrutura
+- Coluna `target_margin_pct` em `strategy_plans` — migration `supabase/migrations/0007_strategy_plan_margin.sql`. **Precisa ser aplicada manualmente no SQL Editor do Supabase.**
+
 ## [0.8.0] — 2026-11-07
 
 ### Adicionado
