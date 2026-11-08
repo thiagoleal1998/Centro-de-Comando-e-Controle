@@ -32,14 +32,35 @@ function isKpiValue(v: string | undefined): boolean {
 
 type Kpi = { label: string; value: string }
 
+// Uma linha de produto tem um valor em R$ por bloco de dia (até ~30 no
+// mês) — bem mais que os poucos valores "R$ 0,00" de sobra que sobem de
+// fórmulas vazias nas linhas do painel de KPIs. Olhar só a contagem (sem
+// depender de onde está o texto do rótulo) evita confundir um KPI cujo
+// rótulo caiu na mesma coluna que "Produto" nas linhas de verdade.
+function looksLikeProductRow(row: string[]): boolean {
+  const currencyCount = row.filter((c) => isCurrency(c)).length
+  return currencyCount >= 6
+}
+
+// Procura o valor nas colunas seguintes ao rótulo, pulando células vazias —
+// na planilha de origem o rótulo (e às vezes o valor) ocupa uma célula
+// mesclada, o que deixa colunas "vazias" de preenchimento entre os dois.
+function findAdjacentValue(row: string[], labelCol: number): string | undefined {
+  for (let c = labelCol + 1; c < row.length && c <= labelCol + 5; c++) {
+    const t = row[c]?.trim()
+    if (!t) continue
+    return isKpiValue(t) ? t : undefined
+  }
+  return undefined
+}
+
 /**
  * Esta aba tem um painel de KPIs solto no meio da grade: células de rótulo
  * (ex.: "META FAT. / MÊS", "DESPESAS PREVISTAS", "Dias corridos") seguidas,
- * na célula ao lado, do valor. Os rótulos exatos variam bastante — em vez
- * de tentar listar todos, usa o FORMATO da linha para distinguir: uma linha
- * de produto tem dezenas de valores (um por bloco de dia), enquanto uma
- * linha de KPI tem só 1-2. Isso pega qualquer rótulo do painel sem
- * confundir com a grade diária de produtos.
+ * numa célula próxima, do valor. Os rótulos exatos variam bastante — em vez
+ * de tentar listar todos, pula só as linhas que claramente são da grade
+ * diária de produtos (nome de produto + vários valores em R$) e trata o
+ * resto como candidato a par rótulo/valor.
  */
 function extractKpis(raw: string[][]): Kpi[] {
   const seen = new Set<string>()
@@ -48,20 +69,18 @@ function extractKpis(raw: string[][]): Kpi[] {
   for (const row of raw) {
     const dateCount = row.filter((c) => c?.trim() && DATE_RE.test(c.trim())).length
     if (dateCount >= 2) continue // linha de cabeçalho dos dias, não um KPI
-
-    const valueCount = row.filter((c) => isKpiValue(c)).length
-    if (valueCount === 0 || valueCount > 4) continue // 0 = nada aqui; muitos = linha de produto
+    if (looksLikeProductRow(row)) continue
 
     row.forEach((cell, col) => {
       const label = cell?.trim()
       if (!label || label.length < 3 || label.length > 50) return
       if (isKpiValue(label)) return
-      const value = row[col + 1]?.trim()
-      if (!isKpiValue(value)) return
+      const value = findAdjacentValue(row, col)
+      if (!value) return
       const key = label.toLowerCase()
       if (seen.has(key)) return
       seen.add(key)
-      kpis.push({ label, value: value! })
+      kpis.push({ label, value })
     })
   }
 

@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.6.3] — 2026-11-07
+
+### Corrigido
+- Dashboard mensal só mostrava Orgânico/Ads, sem Meta/Despesas/Margem/etc. Duas causas: (1) o rótulo desses KPIs ocupa uma célula mesclada na planilha, deixando uma célula vazia entre o rótulo e o valor — a busca agora procura nas próximas colunas em vez de só na imediatamente seguinte; (2) linhas de KPI com valores "R$ 0,00" residuais de fórmulas vazias estavam sendo confundidas com linhas de produto — o limite de quantos valores em R$ uma linha pode ter antes de contar como "linha de produto" foi recalibrado.
+
 ## [0.6.2] — 2026-11-07
 
 ### Corrigido
