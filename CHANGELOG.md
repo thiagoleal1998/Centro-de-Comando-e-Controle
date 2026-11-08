@@ -2,6 +2,18 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.5.0] — 2026-11-07
+
+### Adicionado
+- **Estratégia** (nova página no menu) e **Vendas** (nova página no menu), além da página **Financeira** (antes vazia) agora preenchida — todas sincronizadas ao vivo com a "Planilha de Vendas" do Google Sheets: Projeção/Meta em Estratégia, Despesas/Compras em Financeira, e Vendas Brutas/Produtos/Promotores/Abril-Julho em Vendas.
+- `SheetRawGrid` — novo componente que espelha uma aba como grade bruta (letras de coluna, números de linha, como no Google Sheets), usado nessas três páginas porque várias abas da planilha de vendas têm cabeçalhos em duas linhas e blocos mesclados que não cabem numa tabela com header fixo.
+
+### Corrigido
+- `fetchSheetTables()` não escapava nomes de aba com espaço no range da API do Sheets (ex.: "Dados de vendas Brutas"), o que quebraria a busca dessa aba — corrigido para sempre citar o nome da aba entre aspas simples.
+
+### Infraestrutura
+- `src/lib/sales-sheet-config.ts` e `src/lib/sheets-source.ts` (helper `loadSheetGroup` compartilhado) — novo padrão de configuração para planilhas cujas abas se espalham por páginas diferentes do menu, em vez de ficarem juntas numa só página como a Análise de Produtos.
+
 ## [0.4.1] — 2026-11-03
 
 ### Adicionado

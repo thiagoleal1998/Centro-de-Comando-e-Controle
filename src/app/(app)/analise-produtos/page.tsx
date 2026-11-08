@@ -1,7 +1,8 @@
 import { AlertTriangle } from "lucide-react"
 
-import { fetchSheetTables, type SheetTable } from "@/lib/google-sheets"
+import type { SheetTable } from "@/lib/google-sheets"
 import { SHEET_SOURCES, type SheetSourceConfig } from "@/lib/sheets-config"
+import { loadSheetGroup, type SheetGroupResult } from "@/lib/sheets-source"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SheetDataTable } from "@/components/sheets/sheet-data-table"
@@ -46,24 +47,6 @@ function buildProductOptions(tables: Record<string, SheetTable>): ViabilityProdu
   return options
 }
 
-type SourceResult =
-  | { ok: true; tables: Record<string, SheetTable> }
-  | { ok: false; error: string }
-
-async function loadSource(config: SheetSourceConfig): Promise<SourceResult> {
-  const spreadsheetId = process.env[config.envVar]
-  if (!spreadsheetId) {
-    return { ok: false, error: `Variável de ambiente ${config.envVar} não configurada.` }
-  }
-
-  try {
-    const tables = await fetchSheetTables(spreadsheetId, [...config.sheetOrder])
-    return { ok: true, tables }
-  } catch (err) {
-    return { ok: false, error: err instanceof Error ? err.message : "Erro desconhecido." }
-  }
-}
-
 function SourceError({ message }: { message: string }) {
   return (
     <Card className="border-destructive/50">
@@ -81,7 +64,7 @@ function SourceTabs({
   result,
 }: {
   config: SheetSourceConfig
-  result: SourceResult
+  result: SheetGroupResult
 }) {
   if (!result.ok) {
     return <SourceError message={result.error} />
@@ -122,8 +105,8 @@ function SourceTabs({
 
 export default async function AnaliseProdutosPage() {
   const [esteiraResult, shortlistResult] = await Promise.all([
-    loadSource(SHEET_SOURCES.esteira),
-    loadSource(SHEET_SOURCES.shortlist),
+    loadSheetGroup(SHEET_SOURCES.esteira.envVar, [...SHEET_SOURCES.esteira.sheetOrder]),
+    loadSheetGroup(SHEET_SOURCES.shortlist.envVar, [...SHEET_SOURCES.shortlist.sheetOrder]),
   ])
 
   const viabilityProducts = esteiraResult.ok

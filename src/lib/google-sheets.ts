@@ -44,7 +44,9 @@ export async function fetchSheetTables(
 
   const token = await getGoogleSheetsAccessToken()
 
-  const ranges = sheetNames.map((name) => `${name}!A1:ZZ2000`)
+  // Nomes de aba com espaço (ou outros caracteres especiais) precisam vir
+  // entre aspas simples no range, senão a API do Sheets interpreta errado.
+  const ranges = sheetNames.map((name) => `'${name.replace(/'/g, "''")}'!A1:ZZ2000`)
   const url = new URL(
     `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchGet`
   )

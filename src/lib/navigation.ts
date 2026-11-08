@@ -5,6 +5,8 @@ import {
   Package,
   Radar,
   Network,
+  Target,
+  ShoppingCart,
   Briefcase,
   Wallet,
   Users,
@@ -26,6 +28,12 @@ export const mainNav: NavItem[] = [
     href: "/dashboard",
     icon: LayoutDashboard,
     description: "Visão geral do Centro de Comando.",
+  },
+  {
+    title: "Estratégia",
+    href: "/estrategia",
+    icon: Target,
+    description: "Projeção de crescimento e metas (planilha JT).",
   },
   {
     title: "Projetos",
@@ -50,6 +58,12 @@ export const mainNav: NavItem[] = [
     href: "/analise-produtos",
     icon: Radar,
     description: "Esteira de mineração e validação de produtos (planilha JT).",
+  },
+  {
+    title: "Vendas",
+    href: "/vendas",
+    icon: ShoppingCart,
+    description: "Vendas brutas, produtos, promotores e detalhe mensal (planilha JT).",
   },
   {
     title: "Organograma",
