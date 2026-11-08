@@ -151,6 +151,41 @@ export async function createStrategyExpense(
   return { error: undefined }
 }
 
+export async function updateStrategyExpense(
+  planId: string,
+  expenseId: string,
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const parsed = strategyExpenseSchema.safeParse({
+    name: formData.get("name"),
+    monthlyAmount: formData.get("monthlyAmount"),
+    notes: formData.get("notes"),
+  })
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos." }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from("strategy_plan_expenses")
+    .update({
+      name: parsed.data.name,
+      monthly_amount: parsed.data.monthlyAmount,
+      notes: parsed.data.notes || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", expenseId)
+
+  if (error) {
+    return { error: `Não foi possível salvar a despesa: ${error.message}` }
+  }
+
+  revalidatePath(`/estrategia/planos/${planId}`)
+  return { error: undefined }
+}
+
 export async function deleteStrategyExpense(planId: string, expenseId: string) {
   const supabase = await createClient()
   const { error } = await supabase
@@ -197,6 +232,39 @@ export async function createStrategyProfitSplit(
 
   if (error) {
     return { error: `Não foi possível adicionar a divisão: ${error.message}` }
+  }
+
+  revalidatePath(`/estrategia/planos/${planId}`)
+  return { error: undefined }
+}
+
+export async function updateStrategyProfitSplit(
+  planId: string,
+  splitId: string,
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const parsed = strategyProfitSplitSchema.safeParse({
+    name: formData.get("name"),
+    percentage: formData.get("percentage"),
+  })
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos." }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from("strategy_plan_profit_splits")
+    .update({
+      name: parsed.data.name,
+      percentage: parsed.data.percentage,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", splitId)
+
+  if (error) {
+    return { error: `Não foi possível salvar a divisão: ${error.message}` }
   }
 
   revalidatePath(`/estrategia/planos/${planId}`)

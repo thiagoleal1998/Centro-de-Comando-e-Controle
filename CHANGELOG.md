@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.8.3] — 2026-11-08
+
+### Adicionado
+- Edição de despesas e divisões de lucro já cadastradas nos Planos (Estratégia) — botão de lápis abre um diálogo com os dados preenchidos para ajustar nome, valor/percentual e observação, sem precisar excluir e recriar.
+
 ## [0.8.2] — 2026-11-08
 
 ### Corrigido

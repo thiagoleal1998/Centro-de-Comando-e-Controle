@@ -8,8 +8,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { formatBrl } from "@/lib/format"
+import { updateStrategyExpense, updateStrategyProfitSplit } from "@/lib/actions/strategy"
 import { DeleteStrategyExpenseButton } from "@/components/strategy/delete-strategy-expense-button"
 import { DeleteStrategyProfitSplitButton } from "@/components/strategy/delete-strategy-profit-split-button"
+import { EditStrategyExpenseButton } from "@/components/strategy/edit-strategy-expense-button"
+import { EditStrategyProfitSplitButton } from "@/components/strategy/edit-strategy-profit-split-button"
 import type { StrategyPlan, StrategyPlanExpense, StrategyPlanProfitSplit } from "@/types/domain"
 
 function Kpi({
@@ -95,7 +98,7 @@ export function StrategyPlanDashboard({
                   <TableHead>Despesa</TableHead>
                   <TableHead>Observação</TableHead>
                   <TableHead className="text-right">Valor mensal</TableHead>
-                  <TableHead className="w-8" />
+                  <TableHead className="w-16" />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -107,7 +110,13 @@ export function StrategyPlanDashboard({
                       {formatBrl(e.monthly_amount)}
                     </TableCell>
                     <TableCell>
-                      <DeleteStrategyExpenseButton planId={plan.id} expenseId={e.id} />
+                      <div className="flex items-center justify-end gap-1">
+                        <EditStrategyExpenseButton
+                          expense={e}
+                          action={updateStrategyExpense.bind(null, plan.id, e.id)}
+                        />
+                        <DeleteStrategyExpenseButton planId={plan.id} expenseId={e.id} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -136,7 +145,7 @@ export function StrategyPlanDashboard({
                   <TableHead>Sócio / empresa</TableHead>
                   <TableHead className="text-right">Percentual</TableHead>
                   <TableHead className="text-right">Valor do lucro desejado</TableHead>
-                  <TableHead className="w-8" />
+                  <TableHead className="w-16" />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -150,7 +159,13 @@ export function StrategyPlanDashboard({
                       {formatBrl((targetProfit * s.percentage) / 100)}
                     </TableCell>
                     <TableCell>
-                      <DeleteStrategyProfitSplitButton planId={plan.id} splitId={s.id} />
+                      <div className="flex items-center justify-end gap-1">
+                        <EditStrategyProfitSplitButton
+                          split={s}
+                          action={updateStrategyProfitSplit.bind(null, plan.id, s.id)}
+                        />
+                        <DeleteStrategyProfitSplitButton planId={plan.id} splitId={s.id} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
