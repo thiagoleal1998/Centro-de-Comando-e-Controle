@@ -2,6 +2,18 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.5.1] — 2026-11-07
+
+### Alterado
+- Substituída a grade bruta (letras de coluna estilo planilha) das páginas Estratégia/Financeira/Vendas por renderizações mais visuais:
+  - `SheetSmartTable` — detecta a linha de cabeçalho de verdade (a com mais células preenchidas, em vez de assumir que é sempre a linha 1), esconde colunas totalmente vazias e alinha valores monetários/percentuais à direita. Usado como padrão em Meta, Despesas, Compras, Produtos, Promotores e nas abas mensais (Abril-Julho).
+  - `ProjecaoCards` — a aba Projeção (Estratégia) agora mostra um card de destaque com a meta final e um card por mês (Faturamento, Vendas e Realizado/Diferença quando preenchidos), em vez de linhas de planilha. Também corrige um typo da planilha de origem ("Janiero/27") que faria esse mês herdar por engano os dados do mês anterior.
+  - `VendasBrutasChart` — a aba Vendas Brutas (Vendas) agora é um gráfico de barras por mês com total do período em destaque, tooltip ao passar o mouse e alternância para visualização em tabela.
+- `SheetRawGrid` removido (substituído pelos componentes acima).
+
+### Infraestrutura
+- `src/lib/format.ts` — funções `parseBrNumber`/`formatBrl`/`formatCompactNumber` compartilhadas (antes duplicadas em `analise-produtos/page.tsx`).
+
 ## [0.5.0] — 2026-11-07
 
 ### Adicionado

@@ -2,9 +2,23 @@ import { AlertTriangle } from "lucide-react"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SheetRawGrid } from "@/components/sheets/sheet-raw-grid"
+import { SheetSmartTable } from "@/components/sheets/sheet-smart-table"
+import { ProjecaoCards } from "@/components/sheets/projecao-cards"
+import { VendasBrutasChart } from "@/components/sheets/vendas-brutas-chart"
 import type { SheetGroupResult } from "@/lib/sheets-source"
 import type { SalesSheet } from "@/lib/sales-sheet-config"
+import type { SheetTable } from "@/lib/google-sheets"
+
+function SheetContent({ sheet, table }: { sheet: SalesSheet; table: SheetTable }) {
+  switch (sheet.render) {
+    case "cards":
+      return <ProjecaoCards table={table} />
+    case "chart":
+      return <VendasBrutasChart table={table} />
+    default:
+      return <SheetSmartTable table={table} />
+  }
+}
 
 export function SheetGroupTabs({
   sheets,
@@ -36,7 +50,7 @@ export function SheetGroupTabs({
       </TabsList>
       {sheets.map((sheet) => (
         <TabsContent key={sheet.name} value={sheet.name} className="pt-4">
-          <SheetRawGrid table={result.tables[sheet.name]} />
+          <SheetContent sheet={sheet} table={result.tables[sheet.name]} />
         </TabsContent>
       ))}
     </Tabs>

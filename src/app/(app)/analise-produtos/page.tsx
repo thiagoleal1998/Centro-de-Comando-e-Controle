@@ -3,6 +3,7 @@ import { AlertTriangle } from "lucide-react"
 import type { SheetTable } from "@/lib/google-sheets"
 import { SHEET_SOURCES, type SheetSourceConfig } from "@/lib/sheets-config"
 import { loadSheetGroup, type SheetGroupResult } from "@/lib/sheets-source"
+import { parseBrNumber } from "@/lib/format"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SheetDataTable } from "@/components/sheets/sheet-data-table"
@@ -14,12 +15,6 @@ import {
 } from "@/components/sheets/viability-calculator"
 
 export const dynamic = "force-dynamic"
-
-function parseBrNumber(value: string | undefined): number {
-  if (!value) return 0
-  const parsed = Number(value.replace(/\./g, "").replace(",", "."))
-  return Number.isFinite(parsed) ? parsed : 0
-}
 
 function buildProductOptions(tables: Record<string, SheetTable>): ViabilityProductOption[] {
   const options: ViabilityProductOption[] = []
