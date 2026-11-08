@@ -1,9 +1,14 @@
 import Link from "next/link"
 import { ExternalLink } from "lucide-react"
 
-import { VENDAS_ENV_VAR, VENDAS_SHEETS } from "@/lib/sales-sheet-config"
+import {
+  VENDAS_BRUTAS_SHEET,
+  VENDAS_ENV_VAR,
+  VENDAS_MONTHS_BY_YEAR,
+  VENDAS_SHEETS,
+} from "@/lib/sales-sheet-config"
 import { loadSheetGroup } from "@/lib/sheets-source"
-import { SheetGroupTabs } from "@/components/sheets/sheet-group-tabs"
+import { VendasNestedTabs } from "@/components/sheets/vendas-nested-tabs"
 
 export const dynamic = "force-dynamic"
 
@@ -21,8 +26,7 @@ export default async function VendasPage() {
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold tracking-tight">Vendas</h1>
           <p className="text-muted-foreground text-sm">
-            Vendas brutas, produtos, promotores e detalhe mensal — sincronizado ao vivo com a
-            planilha do JT Group.
+            Vendas brutas e detalhe mensal — sincronizado ao vivo com a planilha do JT Group.
           </p>
         </div>
         {spreadsheetId ? (
@@ -36,7 +40,11 @@ export default async function VendasPage() {
         ) : null}
       </div>
 
-      <SheetGroupTabs sheets={VENDAS_SHEETS} result={result} />
+      <VendasNestedTabs
+        vendasBrutas={VENDAS_BRUTAS_SHEET}
+        monthsByYear={VENDAS_MONTHS_BY_YEAR}
+        result={result}
+      />
     </div>
   )
 }

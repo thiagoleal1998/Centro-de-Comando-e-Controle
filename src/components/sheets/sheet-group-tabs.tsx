@@ -1,24 +1,7 @@
-import { AlertTriangle } from "lucide-react"
-
-import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SheetSmartTable } from "@/components/sheets/sheet-smart-table"
-import { ProjecaoCards } from "@/components/sheets/projecao-cards"
-import { VendasBrutasChart } from "@/components/sheets/vendas-brutas-chart"
+import { SheetContent, SheetLoadError } from "@/components/sheets/sheet-content"
 import type { SheetGroupResult } from "@/lib/sheets-source"
 import type { SalesSheet } from "@/lib/sales-sheet-config"
-import type { SheetTable } from "@/lib/google-sheets"
-
-function SheetContent({ sheet, table }: { sheet: SalesSheet; table: SheetTable }) {
-  switch (sheet.render) {
-    case "cards":
-      return <ProjecaoCards table={table} />
-    case "chart":
-      return <VendasBrutasChart table={table} />
-    default:
-      return <SheetSmartTable table={table} />
-  }
-}
 
 export function SheetGroupTabs({
   sheets,
@@ -28,15 +11,7 @@ export function SheetGroupTabs({
   result: SheetGroupResult
 }) {
   if (!result.ok) {
-    return (
-      <Card className="border-destructive/50">
-        <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-          <AlertTriangle className="text-destructive size-8" />
-          <p className="text-sm font-medium">Não foi possível carregar a planilha</p>
-          <p className="text-muted-foreground max-w-md text-sm">{result.error}</p>
-        </CardContent>
-      </Card>
-    )
+    return <SheetLoadError message={result.error} />
   }
 
   return (

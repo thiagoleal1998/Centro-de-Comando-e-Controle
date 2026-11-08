@@ -2,6 +2,16 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.6.0] — 2026-11-07
+
+### Alterado
+- Página Vendas reestruturada: "Vendas Brutas" ao lado de uma aba "2026" (anos futuros entram do mesmo jeito), com os meses (Abril-Julho) como sub-abas dentro do ano, em vez de uma lista plana.
+- Abas mensais (Abril-Julho) ganharam um dashboard em vez da grade de 90+ colunas diárias: cards com os KPIs do mês (meta, realizado, projeção, margem, rentabilidade, resultado) e um ranking de faturamento por produto com barra proporcional — o detalhe dia a dia continua só na planilha original.
+
+### Infraestrutura
+- `src/lib/sales-sheet-config.ts` — abas mensais agora agrupadas por ano (`VENDAS_MONTHS_BY_YEAR`) em vez de uma lista plana.
+- `SheetContent`/`SheetLoadError` extraídos para `sheet-content.tsx`, compartilhados entre `SheetGroupTabs` (Estratégia/Financeira) e o novo `VendasNestedTabs` (Vendas, com a hierarquia ano → mês).
+
 ## [0.5.3] — 2026-11-07
 
 ### Removido

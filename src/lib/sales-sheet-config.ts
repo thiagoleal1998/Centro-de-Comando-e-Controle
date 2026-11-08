@@ -5,7 +5,7 @@
 
 export const VENDAS_ENV_VAR = "GOOGLE_SHEETS_SPREADSHEET_ID_VENDAS"
 
-export type SalesSheetRender = "smart" | "cards" | "chart"
+export type SalesSheetRender = "smart" | "cards" | "chart" | "month-dashboard"
 
 export type SalesSheet = {
   name: string
@@ -26,10 +26,26 @@ export const FINANCEIRO_VENDAS_SHEETS: SalesSheet[] = [
   { name: "Compras", label: "Compras" },
 ]
 
+export const VENDAS_BRUTAS_SHEET: SalesSheet = {
+  name: "Dados de vendas Brutas",
+  label: "Vendas Brutas",
+  render: "chart",
+}
+
+// Abas mensais agrupadas por ano — a UI mostra o ano como uma aba e os
+// meses como sub-abas dentro dele, em vez de uma lista plana.
+export const VENDAS_MONTHS_BY_YEAR: Record<string, SalesSheet[]> = {
+  "2026": [
+    { name: "Abril", label: "Abril", render: "month-dashboard" },
+    { name: "Maio", label: "Maio", render: "month-dashboard" },
+    { name: "Junho", label: "Junho", render: "month-dashboard" },
+    { name: "Julho", label: "Julho", render: "month-dashboard" },
+  ],
+}
+
+// Lista achatada de todas as abas da página Vendas — usada só para buscar
+// os dados de uma vez (loadSheetGroup precisa dos nomes, não da hierarquia).
 export const VENDAS_SHEETS: SalesSheet[] = [
-  { name: "Dados de vendas Brutas", label: "Vendas Brutas", render: "chart" },
-  { name: "Abril", label: "Abril" },
-  { name: "Maio", label: "Maio" },
-  { name: "Junho", label: "Junho" },
-  { name: "Julho", label: "Julho" },
+  VENDAS_BRUTAS_SHEET,
+  ...Object.values(VENDAS_MONTHS_BY_YEAR).flat(),
 ]
