@@ -2,6 +2,15 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.7.0] — 2026-11-07
+
+### Adicionado
+- **Lançamentos de vendas** (nova aba em Vendas) — cadastro manual de meses, produtos (reaproveita o cadastro de Produtos já existente) e vendas diárias, nativo do sistema (Supabase), independente da planilha do Google. Inclui: criar/editar/excluir mês com metas opcionais (faturamento, super meta, despesas previstas, margem prevista), lançar venda por produto/dia (unidades + faturamento), e um dashboard com KPIs calculados, ranking de faturamento por produto e grade produto × dia — no mesmo estilo visual das abas da planilha JT.
+- A aba "Planilha JT" (antes "Vendas Brutas"/"2026" direto) passa a ficar ao lado de "Lançamentos" dentro de Vendas.
+
+### Infraestrutura
+- Tabelas `sales_months` e `sales_entries` no Supabase (RLS por `created_by`, mesmo padrão de Produtos/Projetos) — migration `supabase/migrations/0005_sales.sql`. **Precisa ser aplicada manualmente no SQL Editor do Supabase antes de usar a funcionalidade.**
+
 ## [0.6.5] — 2026-11-07
 
 ### Corrigido

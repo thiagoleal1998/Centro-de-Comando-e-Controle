@@ -8,7 +8,7 @@ Sistema interno da Neuro Botics (marca do **JT Group**). Reúne:
 - **Análise de Produtos** — sincronização ao vivo com múltiplas planilhas do Google Sheets (Esteira de Mineração, Shortlist Pronix), incluindo uma calculadora de viabilidade/rentabilidade por modalidade de envio.
 - **Estratégia** — projeção de crescimento e metas, sincronizado ao vivo da "Planilha de Vendas" (Google Sheets).
 - **Financeira** — despesas e compras, da mesma planilha de vendas.
-- **Vendas** — vendas brutas, produtos, promotores e detalhe mensal, idem.
+- **Vendas** — planilha do JT Group (vendas brutas e detalhe mensal) ao lado de **Lançamentos** nativos do sistema: cadastro manual de mês, produto e vendas diárias, guardado no Supabase.
 - **Organograma** — estrutura organizacional da Neuro Botics (Conselho Administrativo, Diretoria, Operações).
 - **Administrativo** e **RH** — páginas dedicadas para cada área (ainda vazias, prontas para conteúdo).
 

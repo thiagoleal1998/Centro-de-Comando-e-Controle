@@ -94,3 +94,33 @@ export type Asset = {
   created_by: string
   created_at: string
 }
+
+export type SalesMonth = {
+  id: string
+  year: number
+  month: number
+  meta_faturamento: number | null
+  super_meta_faturamento: number | null
+  despesas_previstas: number | null
+  margem_prevista_pct: number | null
+  notes: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+
+export type SalesEntry = {
+  id: string
+  month_id: string
+  product_id: string
+  day: number
+  units: number
+  revenue: number
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+
+export type SalesEntryWithProduct = SalesEntry & {
+  products: { name: string } | null
+}
