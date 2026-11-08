@@ -2,6 +2,15 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.8.0] — 2026-11-07
+
+### Adicionado
+- **Planos** (nova aba em Estratégia) — crie cenários de projeção nativos do sistema (Supabase, independente da planilha): nome, contexto/descrição, lucro mensal desejado, e uma lista de despesas mensais (ex.: DAS do Simples Nacional, contador, impostos sobre faturamento). O painel calcula o faturamento necessário automaticamente (despesas totais + lucro desejado). Pensado para simulações como a transição de MEI para Simples Nacional.
+- A aba "Planilha JT" (Projeção/Meta) passa a ficar ao lado de "Planos" dentro de Estratégia.
+
+### Infraestrutura
+- Tabelas `strategy_plans` e `strategy_plan_expenses` no Supabase (RLS por `created_by`) — migration `supabase/migrations/0006_strategy_plans.sql`. **Precisa ser aplicada manualmente no SQL Editor do Supabase antes de usar.**
+
 ## [0.7.1] — 2026-11-07
 
 ### Adicionado

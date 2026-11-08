@@ -124,3 +124,24 @@ export type SalesEntry = {
 export type SalesEntryWithProduct = SalesEntry & {
   products: { name: string } | null
 }
+
+export type StrategyPlan = {
+  id: string
+  name: string
+  description: string | null
+  target_profit: number | null
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+
+export type StrategyPlanExpense = {
+  id: string
+  plan_id: string
+  name: string
+  monthly_amount: number
+  notes: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
+}
