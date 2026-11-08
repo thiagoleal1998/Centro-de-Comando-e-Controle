@@ -2,6 +2,14 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.9.0] — 2026-11-08
+
+### Adicionado
+- **Documentos** (novo item no menu) — envie PDFs (até 20MB) ou adicione links externos (Google Drive, OneDrive etc.), com nome e descrição opcional. Lista única com ícone por tipo (arquivo/link), abre em nova aba, exclusão com confirmação.
+
+### Infraestrutura
+- Tabela `documents` no Supabase (RLS por `created_by`) — migration `supabase/migrations/0009_documents.sql`. **Precisa ser aplicada manualmente no SQL Editor do Supabase.** Reaproveita o bucket `assets` do Storage já existente (prefixo `<user_id>/documentos/...`), sem precisar criar bucket novo.
+
 ## [0.8.3] — 2026-11-08
 
 ### Adicionado

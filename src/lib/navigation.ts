@@ -10,6 +10,7 @@ import {
   Briefcase,
   Wallet,
   Users,
+  FileText,
   Settings,
   type LucideIcon,
 } from "lucide-react"
@@ -46,6 +47,12 @@ export const mainNav: NavItem[] = [
     href: "/assets",
     icon: Images,
     description: "Biblioteca central de imagens, vídeos e referências.",
+  },
+  {
+    title: "Documentos",
+    href: "/documentos",
+    icon: FileText,
+    description: "PDFs e links (Google Drive, OneDrive etc.) da operação.",
   },
   {
     title: "Produtos",

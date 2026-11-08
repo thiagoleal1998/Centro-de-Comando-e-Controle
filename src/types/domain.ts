@@ -147,6 +147,19 @@ export type StrategyPlanExpense = {
   updated_at: string
 }
 
+export type DocumentKind = "file" | "link"
+
+export type Document = {
+  id: string
+  name: string
+  kind: DocumentKind
+  storage_path: string | null
+  url: string | null
+  description: string | null
+  created_by: string
+  created_at: string
+}
+
 export type StrategyPlanProfitSplit = {
   id: string
   plan_id: string
