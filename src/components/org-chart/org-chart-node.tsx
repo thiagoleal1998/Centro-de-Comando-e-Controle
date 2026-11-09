@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "cn"
 import type { OrgNode } from "@/lib/org-chart"
 
@@ -26,6 +26,7 @@ function OrgCard({ node, isLeaf }: { node: OrgNode; isLeaf: boolean }) {
           {node.people.map((person) => (
             <div key={person.name} className="flex items-center gap-2.5">
               <Avatar size="sm">
+                {person.photo ? <AvatarImage src={person.photo} alt={person.name} /> : null}
                 <AvatarFallback>{initials(person.name)}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col leading-tight">

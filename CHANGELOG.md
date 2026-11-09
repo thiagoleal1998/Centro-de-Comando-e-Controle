@@ -2,6 +2,11 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.9.1] — 2026-11-08
+
+### Adicionado
+- **Organograma** — fotos de Jonas Almeida e Thiago Leal nos cartões do Conselho Administrativo e da Diretoria (substituem as iniciais quando disponíveis).
+
 ## [0.9.0] — 2026-11-08
 
 ### Adicionado
