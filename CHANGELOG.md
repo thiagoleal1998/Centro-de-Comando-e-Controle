@@ -2,6 +2,14 @@
 
 Todas as mudanças notáveis deste projeto são documentadas aqui. Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
+## [0.9.2] — 2026-11-08
+
+### Adicionado
+- **Organograma** — botão de ajuste (lápis) sobre cada foto: permite reposicionar (horizontal/vertical) e aplicar zoom, com preview ao vivo e opção de redefinir. Ajuste é salvo por pessoa e vale para todos que acessam o sistema.
+
+### Infraestrutura
+- Tabela `org_chart_photos` no Supabase (compartilhada entre usuários, não owner-only como as demais) — migration `supabase/migrations/0010_org_chart_photos.sql`. **Precisa ser aplicada manualmente no SQL Editor do Supabase.**
+
 ## [0.9.1] — 2026-11-08
 
 ### Adicionado

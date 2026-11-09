@@ -169,3 +169,12 @@ export type StrategyPlanProfitSplit = {
   created_at: string
   updated_at: string
 }
+
+export type OrgChartPhotoAdjustment = {
+  person_key: string
+  position_x: number
+  position_y: number
+  zoom: number
+  updated_by: string
+  updated_at: string
+}
